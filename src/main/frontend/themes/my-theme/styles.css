@@ -1,0 +1,42 @@
+/*
+   CSS styling examples for the Vaadin app.
+
+   Visit https://vaadin.com/docs/styling/application-theme/ for more information.
+*/
+
+/* Example: CSS class name to center align the content . */
+.centered-content {
+  margin: 0 auto;
+  max-width: 250px;
+}
+
+.red-button{
+    background-color: red;
+    color: white;
+    font-size: 20px;
+    border-radius: 10px;
+}
+
+.login-form{
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 300px;
+    background-color: white;
+}
+
+.register-form{
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 300px;
+    background-color: white;
+}
+
+/* Example: the style is applied only to the textfields which have the `bordered` class name. */
+vaadin-text-field.bordered::part(input-field) {
+  box-shadow: inset 0 0 0 1px var(--lumo-contrast-30pct);
+  background-color: var(--lumo-base-color);
+}
+
+
