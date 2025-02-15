@@ -1,7 +1,10 @@
 package org.vaadin.example.views;
 
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.html.Anchor;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.router.PageTitle;
@@ -9,6 +12,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.spring.annotation.UIScope;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.vaadin.example.service.AuthService;
@@ -33,7 +37,7 @@ public class LoginView extends VerticalLayout {
         TextField usernameField = new TextField("Username");
         PasswordField passwordField = new PasswordField("Password");
         Button loginButton = new Button("Login");
-        Button registerButton = new Button("Register");
+//        Button registerButton = new Button("Register");
 
         // Login Button Functionality
         loginButton.addClickListener(e -> {
@@ -55,13 +59,26 @@ public class LoginView extends VerticalLayout {
             }
         });
 
-        // Redirect to /register
-        registerButton.addClickListener( e -> {
-           UI.getCurrent().navigate("register");
-        });
+//        // Redirect to /register
+//        registerButton.addClickListener( e -> {
+//           UI.getCurrent().navigate("register");
+//        });
+
+        Div divider = new Div();
+        divider.addClassName("login-divider");
+
+        // The "Register" word as a clickable link
+        Anchor registerLink = new Anchor("register", "Register");
+        registerLink.getStyle().set("color", "blue").set("text-decoration", "none");
+
+        // Normal text before the link
+        Span text = new Span(" if you don't have an account ");
+
+        // Add everything to the divider
+        divider.add(registerLink, text);
 
 
-        VerticalLayout formLayout = new VerticalLayout(usernameField, passwordField, loginButton, registerButton);
+        VerticalLayout formLayout = new VerticalLayout(usernameField, passwordField, loginButton, divider);
         formLayout.addClassName("login-form");
 
         // Center content inside the VerticalLayout

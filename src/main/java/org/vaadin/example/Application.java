@@ -22,3 +22,14 @@ public class Application implements AppShellConfigurator {
         SpringApplication.run(Application.class, args);
     }
 }
+
+/*
+
+TODO:  
+Creative Ideas 💡 (Optional but Cool Features)
+        🔥 "AI Smart Suggest" → If the user isn’t sure about their preferences, the system can suggest settings based on past trips or trending destinations.
+        📍 "Map Integration" → Show a map with recommended places based on the user’s preferences.
+        📅 "Trip Planner Sync" → Automatically schedule itinerary days based on preferences.
+🔄 "Compare Preferences" → If traveling with friends, users can compare & merge preferences for better group trip planning.
+
+ */
