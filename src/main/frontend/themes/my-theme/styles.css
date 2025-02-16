@@ -10,11 +10,20 @@ html, body {
     padding: 0;
     overflow: hidden;
 }
-
+/*
 .centered-content {
   margin: 0 auto;
   max-width: 250px;
 }
+*/
+.centered-content {
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center; /* Centers vertically (if needed) */
+    height: 100vh; /* Full height of the viewport */
+    margin-right: 22vw;
+}
+
 
 .login-form{
     border: 1px solid #ccc;
@@ -117,7 +126,7 @@ html, body {
 .main-layout{
     height: 100vh;
     width: 100vw;
-    margin-left: 22vw;
+    padding-left: 22vw;
 }
 
 .main-container{

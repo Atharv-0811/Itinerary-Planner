@@ -11,6 +11,7 @@ import com.vaadin.flow.router.Route;
 import org.vaadin.example.layout.MainLayout;
 import org.vaadin.example.model.User;
 import org.vaadin.example.model.UserPreferences;
+import org.vaadin.example.service.AuthService;
 import org.vaadin.example.service.UserPreferencesService;
 
 import java.awt.*;
@@ -21,19 +22,30 @@ import java.time.LocalDate;
 public class PreferencesView extends VerticalLayout {
 
     private final UserPreferencesService preferencesService;
+    private final String userId;
 
     public PreferencesView(UserPreferencesService preferencesService) {
         this.preferencesService = preferencesService;
+        this.userId = AuthService.getLoggedInUser();
+
+        System.out.println("Logged-in User ID: " + userId);  // Debugging output
+
+        if (userId == null || userId.isEmpty()) {
+            Notification.show("Error: User ID is missing!");
+            return;
+        }
 
         setSpacing(true);
         setPadding(true);
 
+        // UI Fields
         NumberField minBudgetField = new NumberField("Min Budget");
         NumberField maxBudgetField = new NumberField("Max Budget");
         DatePicker startDateField = new DatePicker("Start Date");
         NumberField daysField = new NumberField("Number of Days");
         ComboBox<String> accommodationTypeField = new ComboBox<>("Accommodation Type");
 
+        // Default Values
         minBudgetField.setValue(5000.0);
         maxBudgetField.setValue(50000.0);
         startDateField.setValue(LocalDate.now());
@@ -42,8 +54,21 @@ public class PreferencesView extends VerticalLayout {
         accommodationTypeField.setItems("Hotel", "Hostel", "Resort", "Apartment");
         accommodationTypeField.setValue("Hotel");
 
+        // Fetch and display preferences
+        UserPreferences existingPreferences = preferencesService.getPreferences(userId).getBody();
+
+        if (existingPreferences != null) {
+            minBudgetField.setValue((double) existingPreferences.getMinBudget());
+            maxBudgetField.setValue((double) existingPreferences.getMaxBudget());
+            startDateField.setValue(existingPreferences.getStartDate());
+            daysField.setValue((double) existingPreferences.getDays());
+            accommodationTypeField.setValue(existingPreferences.getAccommodationType());
+        }
+
+        // Save Preferences
         Button saveButton = new Button("Save Preferences", e -> {
            UserPreferences preferences = new UserPreferences();
+           preferences.setUserId(userId);
             preferences.setMinBudget(minBudgetField.getValue().intValue());
             preferences.setMaxBudget(maxBudgetField.getValue().intValue());
             preferences.setStartDate(startDateField.getValue());
@@ -55,6 +80,7 @@ public class PreferencesView extends VerticalLayout {
         });
 
         add(minBudgetField, maxBudgetField, startDateField, daysField, accommodationTypeField, saveButton);
+        addClassName("centered-content");
 
     }
 

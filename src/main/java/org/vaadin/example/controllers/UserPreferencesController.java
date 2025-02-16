@@ -7,7 +7,7 @@ import org.vaadin.example.model.UserPreferences;
 import org.vaadin.example.service.UserPreferencesService;
 
 @RestController
-@RequestMapping("/preferences")
+@RequestMapping("/api/preferences")
 public class UserPreferencesController {
 
     @Autowired
