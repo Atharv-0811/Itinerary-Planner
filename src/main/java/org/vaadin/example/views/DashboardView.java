@@ -20,8 +20,10 @@ public class DashboardView extends VerticalLayout implements BeforeEnterObserver
     public DashboardView() {
         addClassName("dashboard-content");
 
+        String userId = AuthService.getLoggedInUser();
+
         // Dashboard content
-        H1 title = new H1("This is the Dashboard page");
-        add(title);
+        H1 welcomeMsg = new H1("Welcome, " + userId);
+        add(welcomeMsg);
     }
 }

@@ -8,14 +8,9 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden;
+    --lumo-font-family: Poppins;
 }
-/*
-.centered-content {
-  margin: 0 auto;
-  max-width: 250px;
-}
-*/
+
 .centered-content {
     display: flex;
     justify-content: center; /* Centers horizontally */
@@ -24,6 +19,60 @@ html, body {
     margin-right: 22vw;
 }
 
+@keyframes typewriter {
+    0% {
+        width: 0;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+@keyframes blink {
+    50% {
+        border-color: transparent;
+    }
+}
+
+.title {
+    display: inline-block;
+    font-size: 3rem;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 0;
+    border-right: 3px solid black;
+    animation: typewriter 2s steps(12, end) forwards, blink 0.75s step-end infinite;
+    text-align: center;
+}
+
+.title-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 10vh;
+    text-align: center;
+}
+
+
+.tagline{
+    font-weight: bold;
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.paragraph{
+    color: gray;
+    font-size: 1.2rem;
+}
+
+.create-trip-button{
+    color: white;
+    background-color: #38b6ff;
+    border-radius: 25px;
+    padding: 12px 24px;
+    font-size: 1.2rem;
+}
 
 .login-form{
     border: 1px solid #ccc;
@@ -39,6 +88,20 @@ html, body {
     border-top: 1px solid #ccc;
     margin: 10px 0;
     padding-top: 5px;
+}
+
+.logout-button {
+    margin-top: auto; /* Push to bottom */
+    width: 100%;
+    background-color: #e74c3c;
+    color: white;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+}
+
+.logout-button:hover {
+    background-color: #c0392b;
 }
 
 .register-form{
@@ -108,10 +171,11 @@ html, body {
 }
 
 .dashboard-content {
+    display: flex;
+    align-items: center;
     flex-grow: 1; /* Ensures it takes the remaining space */
     padding: 20px;
     overflow-y: auto;
-    width: 30vw !important ;
 }
 
 .sidebar-wrapper{

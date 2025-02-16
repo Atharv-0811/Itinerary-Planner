@@ -2,8 +2,14 @@ package org.vaadin.example.layout;
 
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLayout;
+import com.vaadin.flow.component.button.Button;
+import org.vaadin.example.service.AuthService;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+
+import java.awt.*;
 
 public class MainLayout extends VerticalLayout implements RouterLayout {
 
@@ -25,9 +31,28 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
         Anchor tripsLink = new Anchor("my-trips", "My Trips");
         Anchor preferencesLink = new Anchor("preferences", "Preferences");
 
-        sidebar.add(logo, homeLink, tripsLink, preferencesLink);
+        // Content layout to push items to top
+        VerticalLayout content = new VerticalLayout(logo, homeLink, tripsLink, preferencesLink);
+        content.setSpacing(true);
+        content.setPadding(true);
+        content.setSizeFull();
+        content.setAlignItems(FlexComponent.Alignment.START);
 
-        // Add sidebar to layout
+        // Make content take full height so logout stays at the bottom
+        setFlexGrow(1, content);
+
+        // Logout Button
+        Button logoutBtn = new Button("Logout");
+        logoutBtn.addClassName("logout-button");
+        logoutBtn.setWidthFull();
+
+        logoutBtn.addClickListener(e ->{
+            AuthService.logout();
+            Notification.show("Logged out!");
+            getUI().ifPresent(ui -> ui.navigate("login"));
+        });
+
+        sidebar.add(content, logoutBtn);
         add(sidebar);
     }
 }
