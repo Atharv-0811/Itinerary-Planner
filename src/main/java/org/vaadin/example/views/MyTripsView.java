@@ -10,7 +10,7 @@ import org.vaadin.example.layout.MainLayout;
 import java.awt.*;
 
 
-@Route(value = "trips", layout = MainLayout.class)
+@Route(value = "my-trips", layout = MainLayout.class)
 public class MyTripsView extends VerticalLayout {
 
     public MyTripsView(){

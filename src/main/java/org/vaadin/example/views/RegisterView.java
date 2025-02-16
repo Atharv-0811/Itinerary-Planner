@@ -10,7 +10,6 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.UIScope;
-import org.springframework.data.mongodb.core.aggregation.BooleanOperators;
 import org.springframework.http.ResponseEntity;
 import org.vaadin.example.service.UserService;
 
@@ -18,15 +17,16 @@ import org.vaadin.example.service.UserService;
 @PageTitle("Register | Itinerary Planner")
 @UIScope
 public class RegisterView extends VerticalLayout {
+
     private final UserService userService;
 
     public RegisterView(UserService userService){
-        this.userService = userService;
 
+        this.userService = userService;
         setAlignItems(Alignment.CENTER);
 
         H1 title = new H1("Register Page");
-        title.addClassName("centered-content");
+        addClassName("centered-content");
 
         TextField usernameField = new TextField("Username");
         PasswordField passwordField = new PasswordField("Password");
