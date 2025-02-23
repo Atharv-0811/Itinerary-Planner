@@ -1,5 +1,6 @@
 package org.vaadin.example.views;
 
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -10,10 +11,14 @@ import org.vaadin.example.model.TourPackage;
 import org.vaadin.example.repositories.TourPackageRepository;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Route(value = "dashboard", layout = MainLayout.class)
 public class DashboardView extends VerticalLayout {
 
+    private final Div packagesContainer = new Div(); // Container for filtered tour cards
+    private final ComboBox<String> tripTypeFilter = new ComboBox<>("Filter by Trip Type");
     private final TourPackageRepository tourPackageRepository;
 
     @Autowired
@@ -23,11 +28,36 @@ public class DashboardView extends VerticalLayout {
         setSpacing(true);
         setPadding(true);
 
-        loadTourPackages();
+        configureTripTypeFilter();
+        add(tripTypeFilter, packagesContainer);
+
+        loadTourPackages("All"); // Initially load all packages
     }
 
-    private void loadTourPackages() {
+    private void configureTripTypeFilter() {
+        // Get unique trip types from the database
         List<TourPackage> tourPackages = tourPackageRepository.findAll();
+        Set<String> tripTypes = tourPackages.stream()
+                .map(TourPackage::getTripType)
+                .collect(Collectors.toSet());
+        tripTypes.add("All");
+        tripTypeFilter.setItems(tripTypes);
+        tripTypeFilter.setValue("All");
+        tripTypeFilter.setPlaceholder("Select Trip Type");
+        tripTypeFilter.addValueChangeListener(event -> loadTourPackages(event.getValue()));
+    }
+
+    private void loadTourPackages(String selectedTripType) {
+        packagesContainer.removeAll(); // Clear previous results
+        List<TourPackage> tourPackages = tourPackageRepository.findAll();
+
+        // Filter packages if a specific trip type is selected
+        if (selectedTripType != null && !selectedTripType.equals("All")) {
+            tourPackages = tourPackages.stream()
+                    .filter(pkg -> pkg.getTripType().equals(selectedTripType))
+                    .collect(Collectors.toList());
+        }
+
         tourPackages.forEach(this::addTourPackageCard);
     }
 
@@ -37,7 +67,7 @@ public class DashboardView extends VerticalLayout {
         container.setWidthFull();
 
         // Create the heading for Package ID
-        H3 packageIdHeading = new H3(tourPackage.getId());
+        H3 packageIdHeading = new H3("Package ID: " + tourPackage.getId());
         packageIdHeading.addClassName("welcome-msg");
 
         // Create the tour card
@@ -58,8 +88,7 @@ public class DashboardView extends VerticalLayout {
         // Add elements to the container
         container.add(packageIdHeading, card);
 
-        // Add the container to the layout
-        add(container);
+        // Add the container to the UI container
+        packagesContainer.add(container);
     }
-
 }
