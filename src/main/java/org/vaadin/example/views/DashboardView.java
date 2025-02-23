@@ -1,29 +1,45 @@
 package org.vaadin.example.views;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.theme.Theme;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.example.layout.MainLayout;
 import org.vaadin.example.model.TourPackage;
+import org.vaadin.example.model.UserPreferences;
 import org.vaadin.example.repositories.TourPackageRepository;
+import org.vaadin.example.repositories.UserPreferencesRepository;
+import org.vaadin.example.service.AuthService;
+import org.vaadin.example.service.TourPackageFilter;
 
+import java.nio.file.Files;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Route(value = "dashboard", layout = MainLayout.class)
-public class DashboardView extends VerticalLayout {
+public class DashboardView extends VerticalLayout implements BeforeEnterObserver {
 
     private final Div packagesContainer = new Div(); // Container for filtered tour cards
     private final ComboBox<String> tripTypeFilter = new ComboBox<>("Filter by Trip Type");
     private final TourPackageRepository tourPackageRepository;
+    private final AuthService authService;
+    private final UserPreferencesRepository userPreferencesRepository;
 
     @Autowired
-    public DashboardView(TourPackageRepository tourPackageRepository) {
+    public DashboardView(HttpSession httpSession, TourPackageRepository tourPackageRepository, AuthService authService, UserPreferencesRepository userPreferencesRepository) {
         this.tourPackageRepository = tourPackageRepository;
+        this.authService = authService;
+        this.userPreferencesRepository = userPreferencesRepository;
 
         setSpacing(true);
         setPadding(true);
@@ -33,6 +49,28 @@ public class DashboardView extends VerticalLayout {
 
         loadTourPackages("All"); // Initially load all packages
     }
+
+    @Override
+    public void beforeEnter(BeforeEnterEvent event) {
+        if (!authService.isUserLoggedIn()) {
+            event.forwardTo("login");
+        }
+    }
+
+    private boolean isBudgetMatch(TourPackage pkg, UserPreferences preferences) {
+        // Get the min and max budget from the user preferences
+        int minBudget = preferences.getMinBudget();
+        int maxBudget = preferences.getMaxBudget();
+
+        // Get the budget range of the tour package (min and max values)
+        int packageMinBudget = pkg.getBudgetRange().get(0);
+        int packageMaxBudget = pkg.getBudgetRange().get(1);
+
+        // Check if the package's budget range is within the user's budget range
+        return packageMinBudget >= minBudget && packageMaxBudget <= maxBudget;
+    }
+
+
 
     private void configureTripTypeFilter() {
         // Get unique trip types from the database
@@ -49,16 +87,42 @@ public class DashboardView extends VerticalLayout {
 
     private void loadTourPackages(String selectedTripType) {
         packagesContainer.removeAll(); // Clear previous results
-        List<TourPackage> tourPackages = tourPackageRepository.findAll();
+        String userId = authService.getLoggedInUser();
 
-        // Filter packages if a specific trip type is selected
-        if (selectedTripType != null && !selectedTripType.equals("All")) {
-            tourPackages = tourPackages.stream()
-                    .filter(pkg -> pkg.getTripType().equals(selectedTripType))
-                    .collect(Collectors.toList());
+        // Fetch user preferences from the database
+        Optional<UserPreferences> userPreferencesOptional = userPreferencesRepository.findByUserId(userId);
+
+        if (userPreferencesOptional.isPresent()) {
+            UserPreferences userPreferences = userPreferencesOptional.get();
+            // Fetch all tour packages from the repository
+            List<TourPackage> tourPackages = tourPackageRepository.findAll();
+
+            // Create filter object
+            TourPackageFilter filter = new TourPackageFilter(userPreferences);
+
+            // Apply all filters (you can apply more filters as you add them)
+            List<TourPackage> filteredPackages = filter.filterByBudget(tourPackages);
+            filteredPackages = filter.filterByDestination(filteredPackages);
+            filteredPackages = filter.filterByAccommodation(filteredPackages);
+
+            // Display the filtered packages (for now, print to console)
+            filteredPackages.forEach(pkg -> System.out.println("Filtered Package: " + pkg.getId()));
+
+        } else {
+            // Handle case where user preferences are not found
+            System.out.println("User preferences not found.");
         }
 
-        tourPackages.forEach(this::addTourPackageCard);
+//        List<TourPackage> tourPackages = tourPackageRepository.findAll();
+//
+//        // Filter packages if a specific trip type is selected
+//        if (selectedTripType != null && !selectedTripType.equals("All")) {
+//            tourPackages = tourPackages.stream()
+//                    .filter(pkg -> pkg.getTripType().equals(selectedTripType))
+//                    .collect(Collectors.toList());
+//        }
+//
+//        tourPackages.forEach(this::addTourPackageCard);
     }
 
     private void addTourPackageCard(TourPackage tourPackage) {
@@ -67,7 +131,7 @@ public class DashboardView extends VerticalLayout {
         container.setWidthFull();
 
         // Create the heading for Package ID
-        H3 packageIdHeading = new H3("Package ID: " + tourPackage.getId());
+        H3 packageIdHeading = new H3(tourPackage.getId());
         packageIdHeading.addClassName("welcome-msg");
 
         // Create the tour card

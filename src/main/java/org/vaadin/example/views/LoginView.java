@@ -1,5 +1,6 @@
 package org.vaadin.example.views;
 
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
@@ -61,6 +62,8 @@ public class LoginView extends VerticalLayout {
                 Notification.show(response.getBody(), 3000, Notification.Position.TOP_CENTER);
             }
         });
+
+        loginButton.addClickShortcut(Key.ENTER); // Pressing Enter will trigger the button click
 
         Div divider = new Div();
         divider.addClassName("login-divider");

@@ -5,20 +5,42 @@
 */
 
 :root {
-/*
-    --rich-black: #051622ff;
-    --persian-green: #1ba098ff;
-    --paynes-gray: #666a86ff;
-    --thistle: #dec5e3ff;
-    --flax: #f4e285ff;
-    */
-    --c1: #051622ff;
-    /*--c2: #1ba098ff;*/
-    --c2: #0FBAAEff;
-    --c3: #666a86ff;
-    --c4: #dec5e3ff;
-    --c5: #f4e285ff;
-    --c6: #BDE2F0;
+    --c1: #051622ff; /* Dark Rich Black */
+    --c2: #0FBAAEff; /* Bright Teal */
+    --c3: #666a86ff; /* Muted Grayish Blue */
+    --c4: #dec5e3ff; /* Soft Thistle */
+    --c5: #f4e285ff; /* Warm Flax Yellow */
+    --c6: #BDE2F0; /* Light Sky Blue */
+
+    --tour-card-bg: #f7f7f7; /* Light Neutral Gray for contrast */
+    --tour-card-border: #ddd; /* Subtle border color */
+    --tour-card-text: #333; /* Dark gray for readability */
+}
+
+vaadin-combo-box {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+vaadin-combo-box::part(input-field) {
+    background-color: var(--c6);
+    border: 2px solid var(--c2);
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 0.9rem;
+    height: 6vh;
+    width: 10vw;
+}
+
+vaadin-combo-box::part(label) {
+    color: var(--c2);
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+vaadin-combo-box::part(toggle-button) {
+    color: var(--c1);
+    font-size: 10px;
 }
 
 html, body {
@@ -29,7 +51,7 @@ html, body {
     background-color: var(--c1);
 }
 
-.landing-page{
+.landing-page {
 }
 
 .centered-content {
@@ -76,7 +98,7 @@ html, body {
     text-align: center;
 }
 
-.tagline{
+.tagline {
     color: var(--c6);
     opacity: 80%;
     font-weight: bold;
@@ -84,12 +106,12 @@ html, body {
     margin-bottom: 0.5rem;
 }
 
-.paragraph{
+.paragraph {
     color: gray;
     font-size: 1.2rem;
 }
 
-.create-trip-button{
+.create-trip-button {
     color: var(--c1);
     background-color: #45ACD1;
     border-radius: 25px;
@@ -97,7 +119,7 @@ html, body {
     font-size: 1.2rem;
 }
 
-.create-trip-button:hover{
+.create-trip-button:hover {
     color: var(--c1);
     background-color: var(--c4);
     border-radius: 25px;
@@ -105,11 +127,11 @@ html, body {
     font-size: 1.2rem;
 }
 
-.welcome-msg{
+.welcome-msg {
     color: var(--c6);
 }
 
-.login-form{
+.login-form {
     border: 1px solid #ccc;
     padding: 20px;
     border-radius: 8px;
@@ -117,7 +139,7 @@ html, body {
     background-color: white;
 }
 
-.login-divider{
+.login-divider {
     width: 100%;
     text-align: center;
     border-top: 1px solid #ccc;
@@ -139,7 +161,7 @@ html, body {
     background-color: #c0392b;
 }
 
-.register-form{
+.register-form {
     border: 1px solid #ccc;
     padding: 20px;
     border-radius: 8px;
@@ -147,7 +169,7 @@ html, body {
     background-color: white;
 }
 
-.dashboard-layout{
+.dashboard-layout {
     display: flex;
     height: 100vh; /* Full height */
 }
@@ -156,7 +178,7 @@ html, body {
     background-color: var(--c6) !important;
     position: relative;
     background-color: #f4f4f4;
-    width:100%;
+    width: 100%;
     padding: 20px 10px;
     height: 95vh; /* Reduce height slightly for a floating effect */
     display: flex;
@@ -214,7 +236,7 @@ html, body {
     overflow-y: auto;
 }
 
-.sidebar-wrapper{
+.sidebar-wrapper {
     padding: 2vw;
     display: flex;
     justify-content: center;
@@ -223,24 +245,26 @@ html, body {
     height: 100vh;
 }
 
-.main-layout{
+.main-layout {
     height: 100vh;
     width: 100vw;
     padding-left: 22vw;
     padding-right: 2.5vw;
 }
 
-.main-container{
+.main-container {
     padding: 2vw;
     width: 80vw;
     height: 100vh;
 }
 
 .tour-card {
+    background-color: var(--tour-card-bg);
+    border: 1px solid var(--tour-card-border);
+    color: var(--tour-card-text);
     padding: 1rem;
     border-radius: 0.625rem;
     box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
-    background: #fff;
     margin-top: 1rem;
     margin-bottom: 1rem;
     font-size: 0.875rem;
@@ -249,6 +273,6 @@ html, body {
 
 /* Example: the style is applied only to the textfields which have the bordered class name. */
 vaadin-text-field.bordered::part(input-field) {
-  box-shadow: inset 0 0 0 1px var(--lumo-contrast-30pct);
-  background-color: var(--lumo-base-color);
+    box-shadow: inset 0 0 0 1px var(--lumo-contrast-30pct);
+    background-color: var(--lumo-base-color);
 }

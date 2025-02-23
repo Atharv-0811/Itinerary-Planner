@@ -1,5 +1,6 @@
 package org.vaadin.example.views;
 
+import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
@@ -54,6 +55,8 @@ public class RegisterView extends VerticalLayout {
                 Notification.show("Error connecting to server", 3000, Notification.Position.TOP_CENTER);
             }
         });
+
+        registerButton.addClickShortcut(Key.ENTER);
 
         VerticalLayout formLayout = new VerticalLayout(usernameField, passwordField, registerButton);
         formLayout.addClassName("register-form");
