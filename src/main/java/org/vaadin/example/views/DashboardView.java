@@ -57,21 +57,6 @@ public class DashboardView extends VerticalLayout implements BeforeEnterObserver
         }
     }
 
-    private boolean isBudgetMatch(TourPackage pkg, UserPreferences preferences) {
-        // Get the min and max budget from the user preferences
-        int minBudget = preferences.getMinBudget();
-        int maxBudget = preferences.getMaxBudget();
-
-        // Get the budget range of the tour package (min and max values)
-        int packageMinBudget = pkg.getBudgetRange().get(0);
-        int packageMaxBudget = pkg.getBudgetRange().get(1);
-
-        // Check if the package's budget range is within the user's budget range
-        return packageMinBudget >= minBudget && packageMaxBudget <= maxBudget;
-    }
-
-
-
     private void configureTripTypeFilter() {
         // Get unique trip types from the database
         List<TourPackage> tourPackages = tourPackageRepository.findAll();
@@ -94,36 +79,33 @@ public class DashboardView extends VerticalLayout implements BeforeEnterObserver
 
         if (userPreferencesOptional.isPresent()) {
             UserPreferences userPreferences = userPreferencesOptional.get();
+
             // Fetch all tour packages from the repository
             List<TourPackage> tourPackages = tourPackageRepository.findAll();
 
-            // Create filter object
+            // Create filter object with user preferences
             TourPackageFilter filter = new TourPackageFilter(userPreferences);
 
-            // Apply all filters (you can apply more filters as you add them)
+            // Apply budget filter (you can add more filters here as needed)
             List<TourPackage> filteredPackages = filter.filterByBudget(tourPackages);
-            filteredPackages = filter.filterByDestination(filteredPackages);
-            filteredPackages = filter.filterByAccommodation(filteredPackages);
 
-            // Display the filtered packages (for now, print to console)
-            filteredPackages.forEach(pkg -> System.out.println("Filtered Package: " + pkg.getId()));
+            // Debugging: Print out how many filtered packages are available
+            System.out.println("Number of filtered packages: " + filteredPackages.size() + "\n\n");
+
+            // Ensure only valid packages are being passed to the display
+            if (filteredPackages.isEmpty()) {
+                System.out.println("No valid packages found after filtering.");
+            } else {
+                // Now display the valid (filtered) packages
+                filteredPackages.forEach(this::addTourPackageCard);
+            }
 
         } else {
             // Handle case where user preferences are not found
             System.out.println("User preferences not found.");
         }
-
-//        List<TourPackage> tourPackages = tourPackageRepository.findAll();
-//
-//        // Filter packages if a specific trip type is selected
-//        if (selectedTripType != null && !selectedTripType.equals("All")) {
-//            tourPackages = tourPackages.stream()
-//                    .filter(pkg -> pkg.getTripType().equals(selectedTripType))
-//                    .collect(Collectors.toList());
-//        }
-//
-//        tourPackages.forEach(this::addTourPackageCard);
     }
+
 
     private void addTourPackageCard(TourPackage tourPackage) {
         // Create a container for the package

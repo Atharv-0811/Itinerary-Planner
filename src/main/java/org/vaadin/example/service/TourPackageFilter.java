@@ -16,46 +16,28 @@ public class TourPackageFilter {
 
     // Function to filter packages based on the user's budget
     public List<TourPackage> filterByBudget(List<TourPackage> tourPackages) {
-        double budgetTolerance = 0.10;
+        double budgetTolerance = 0.10;  // Allow 10% above max budget
+        double minAllowedBudget = userPreferences.getMinBudget() * (1 - budgetTolerance);
         double maxAllowedBudget = userPreferences.getMaxBudget() * (1 + budgetTolerance);
 
-        System.out.println("User's Min Budget: " + userPreferences.getMinBudget());
+        System.out.println("User's Min Budget (with tolerance): " + minAllowedBudget);
         System.out.println("User's Max Budget (with tolerance): " + maxAllowedBudget);
 
-        return tourPackages.stream()
+        // Filtering valid tour packages based on the budget
+        List<TourPackage> validPackages = tourPackages.stream()
                 .filter(pkg -> {
-                    // Get the budget range from the TourPackage model
-                    List<Integer> budgetRange = pkg.getBudgetRange();
-                    if (budgetRange == null || budgetRange.size() < 2) return false;
-
-                    int packageMinBudget = budgetRange.get(0);
-                    int packageMaxBudget = budgetRange.get(1);
-
-                    // Debugging lines to check values
-                    System.out.println("Package: " + pkg.getId());
-                    System.out.println("Package Min Budget: " + packageMinBudget + ", Package Max Budget: " + packageMaxBudget);
-
-                    // Check if the package's budget range falls within the user's preferred range
-                    boolean isValid = packageMinBudget >= userPreferences.getMinBudget()
-                            && packageMaxBudget <= maxAllowedBudget;
-
-                    System.out.println("Package " + pkg.getId() + " is " + (isValid ? "valid" : "invalid") + " for user's budget.");
+                    boolean isValid = pkg.getBudgetRange().get(0) >= minAllowedBudget
+                            && pkg.getBudgetRange().get(1) <= maxAllowedBudget;
                     return isValid;
                 })
                 .collect(Collectors.toList());
-    }
 
-    // Check if the tour package's budget range is within the user's preferred budget range
-    private boolean isBudgetInRange(TourPackage pkg) {
-        List<Integer> budgetRange = pkg.getBudgetRange();
-        if (budgetRange != null && budgetRange.size() == 2) {
-            int packageMinBudget = budgetRange.get(0);
-            int packageMaxBudget = budgetRange.get(1);
+        // Print the entire list of valid packages
+        System.out.println("Filtered Valid Packages: ");
+        validPackages.forEach(pkg -> System.out.println(pkg.getId() + ": " + pkg.getDestination()));
 
-            return packageMinBudget >= userPreferences.getMinBudget()
-                    && packageMaxBudget <= userPreferences.getMaxBudget();
-        }
-        return false; // If budgetRange is not valid, exclude the package
+        return validPackages;
+
     }
 
     // Add other filters (e.g., destination, accommodation) as needed
