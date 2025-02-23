@@ -1,11 +1,14 @@
 package org.vaadin.example.repositories;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
 import org.vaadin.example.model.TourPackage;
+import org.springframework.data.mongodb.repository.Query;
+
 import java.util.List;
 
+@Repository
 public interface TourPackageRepository extends MongoRepository<TourPackage, String> {
-    List<TourPackage> findByDestination(String destination);
-    List<TourPackage> findByPriceBetween(int minPrice, int maxPrice);
-    List<TourPackage> findByAccommodationType(String accommodationType);
+    @Query("{ 'budgetRange': { $gte: ?0, $lte: ?1 }, 'tripDuration': ?2, 'accommodation.type': ?3 }")
+    List<TourPackage> findMatchingPackages(int minBudget, int maxBudget, int duration, String accommodationType);
 }
