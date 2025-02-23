@@ -1,5 +1,6 @@
 package org.vaadin.example.views;
 
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.*;
@@ -24,6 +25,7 @@ public class DashboardView extends VerticalLayout implements BeforeEnterObserver
 
         // Dashboard content
         H1 welcomeMsg = new H1("Welcome, " + userId);
+        welcomeMsg.addClassName("welcome-msg");
         add(welcomeMsg);
     }
 }

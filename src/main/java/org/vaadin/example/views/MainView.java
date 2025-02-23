@@ -15,6 +15,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.theme.Theme;
+import com.vaadin.flow.theme.lumo.Lumo;
 import org.vaadin.example.GreetService;
 
 import java.time.LocalDate;
@@ -44,6 +46,7 @@ public class MainView extends VerticalLayout {
         setSizeFull();
         setDefaultHorizontalComponentAlignment(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
+        addClassName("landing-page");
 
         H1 title = new H1("TravelGenie...");
         title.addClassName("title");
@@ -52,7 +55,7 @@ public class MainView extends VerticalLayout {
         titleWrapper.addClassName("title-wrapper");
 
         H2 tagline = new H2("Plan you next trip with TravelGenie");
-        title.addClassName("tagline");
+        tagline.addClassName("tagline");
 
         // Subtitle
         Paragraph subtitle = new Paragraph(

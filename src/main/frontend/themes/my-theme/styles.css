@@ -4,11 +4,32 @@
    Visit https://vaadin.com/docs/styling/application-theme/ for more information.
 */
 
+:root {
+/*
+    --rich-black: #051622ff;
+    --persian-green: #1ba098ff;
+    --paynes-gray: #666a86ff;
+    --thistle: #dec5e3ff;
+    --flax: #f4e285ff;
+    */
+    --c1: #051622ff;
+    /*--c2: #1ba098ff;*/
+    --c2: #0FBAAEff;
+    --c3: #666a86ff;
+    --c4: #dec5e3ff;
+    --c5: #f4e285ff;
+    --c6: #BDE2F0;
+}
+
 html, body {
     height: 100%;
     margin: 0;
     padding: 0;
     --lumo-font-family: Poppins;
+    background-color: var(--c1);
+}
+
+.landing-page{
 }
 
 .centered-content {
@@ -35,13 +56,14 @@ html, body {
 }
 
 .title {
+    color: var(--c2);
     display: inline-block;
     font-size: 3rem;
     font-weight: bold;
     white-space: nowrap;
     overflow: hidden;
     width: 0;
-    border-right: 3px solid black;
+    border-right: 3px solid white;
     animation: typewriter 2s steps(12, end) forwards, blink 0.75s step-end infinite;
     text-align: center;
 }
@@ -54,10 +76,11 @@ html, body {
     text-align: center;
 }
 
-
 .tagline{
+    color: var(--c6);
+    opacity: 80%;
     font-weight: bold;
-    font-size: 3rem;
+    font-size: 2rem;
     margin-bottom: 0.5rem;
 }
 
@@ -67,11 +90,23 @@ html, body {
 }
 
 .create-trip-button{
-    color: white;
-    background-color: #38b6ff;
+    color: var(--c1);
+    background-color: #45ACD1;
     border-radius: 25px;
     padding: 12px 24px;
     font-size: 1.2rem;
+}
+
+.create-trip-button:hover{
+    color: var(--c1);
+    background-color: var(--c4);
+    border-radius: 25px;
+    padding: 12px 24px;
+    font-size: 1.2rem;
+}
+
+.welcome-msg{
+    color: var(--c6);
 }
 
 .login-form{
@@ -118,6 +153,7 @@ html, body {
 }
 
 .sidebar {
+    background-color: var(--c6) !important;
     position: relative;
     background-color: #f4f4f4;
     width:100%;
@@ -156,7 +192,7 @@ html, body {
 
 /* Make background color fill entire width of sidebar */
 .sidebar a:hover {
-    background-color: #ddd;
+    background-color: #45ACD1;
     width: calc(100% + 20px);
     margin-left: -10px;
     border-radius: 10px;

@@ -1,7 +1,9 @@
 package org.vaadin.example.service;
 
 import com.vaadin.flow.server.VaadinSession;
+import org.springframework.stereotype.Service;
 
+@Service
 public class AuthService {
 
     public static void login(String username){

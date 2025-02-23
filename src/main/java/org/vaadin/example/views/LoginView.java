@@ -35,6 +35,8 @@ public class LoginView extends VerticalLayout {
 
         H1 title = new H1("Login Page");
         addClassName("centered-content");
+        title.getStyle().set("color", "#0FBAAEff");
+
 
         TextField usernameField = new TextField("Username");
         PasswordField passwordField = new PasswordField("Password");

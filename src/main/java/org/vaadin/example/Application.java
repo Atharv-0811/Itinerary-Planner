@@ -7,15 +7,8 @@ import com.vaadin.flow.theme.lumo.Lumo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-/**
- * The entry point of the Spring Boot application.
- *
- * Use the @PWA annotation make the application installable on phones, tablets
- * and some desktop browsers.
- *
- */
 @SpringBootApplication
-@PWA(name = "Project Base for Vaadin with Spring", shortName = "Project Base")
+@PWA(name = "Test Application", shortName = "Test", offlineResources = {})
 @Theme(value="my-theme")
 public class Application implements AppShellConfigurator {
 
@@ -24,8 +17,17 @@ public class Application implements AppShellConfigurator {
     }
 }
 
-/*
+// OpenTripMap API_KEY = 5ae2e3f221c38a28845f05b6e02fba63d057108c4b115526e08e0b21
 
+/*
+TODO:
+categorise the api query parameters based on the preferences.
+so for example
+CASE 1:  if user gives budget of 10000rs and accommodation type is hostel, i will allocate 3000rs(say) as parameter for api query for accommodation.
+CASE 2 : if user gives budget of 10000rs and accommodation type is resort, i will allocate 5000rs as parameter for hotels/accommodation in api query
+*/
+
+/*
 TODO:  
 Creative Ideas 💡 (Optional but Cool Features)
         🔥 "AI Smart Suggest" → If the user isn’t sure about their preferences, the system can suggest settings based on past trips or trending destinations.
@@ -33,4 +35,4 @@ Creative Ideas 💡 (Optional but Cool Features)
         📅 "Trip Planner Sync" → Automatically schedule itinerary days based on preferences.
 🔄 "Compare Preferences" → If traveling with friends, users can compare & merge preferences for better group trip planning.
 
- */
+*/
