@@ -1,27 +1,27 @@
 package org.vaadin.example.layout;
 
 import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.contextmenu.ContextMenu;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLayout;
-import com.vaadin.flow.component.button.Button;
 import org.vaadin.example.service.AuthService;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
-
-import java.awt.*;
 
 public class MainLayout extends VerticalLayout implements RouterLayout {
-
-    private final VerticalLayout sidebar;
 
     public MainLayout() {
         setSizeFull();
         addClassName("main-layout");
 
         // Sidebar
-        sidebar = new VerticalLayout();
+        VerticalLayout sidebar = new VerticalLayout();
         sidebar.addClassName("sidebar");
         sidebar.setWidth("20vw");
 
@@ -32,28 +32,69 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
         Anchor tripsLink = new Anchor("my-trips", "My Trips");
         Anchor preferencesLink = new Anchor("preferences", "Preferences");
 
-        // Content layout to push items to top
+        // Content layout
         VerticalLayout content = new VerticalLayout(logo, homeLink, tripsLink, preferencesLink);
         content.setSpacing(true);
         content.setPadding(true);
         content.setSizeFull();
         content.setAlignItems(FlexComponent.Alignment.START);
 
-        // Make content take full height so logout stays at the bottom
+        // Make content take full height so user menu stays at the bottom
         setFlexGrow(1, content);
 
-        // Logout Button
-        Button logoutBtn = new Button("Logout");
-        logoutBtn.addClassName("logout-button");
-        logoutBtn.setWidthFull();
+        // --- User Profile Layout ---
+        HorizontalLayout userLayout = new HorizontalLayout();
+        userLayout.addClassName("user-profile");
+        userLayout.setAlignItems(FlexComponent.Alignment.CENTER);
+        userLayout.setSpacing(true);
+        userLayout.setPadding(true);
+        userLayout.setWidthFull();
 
-        logoutBtn.addClickListener(e ->{
-            AuthService.logout();
-            Notification.show("Logged out!");
-            getUI().ifPresent(ui -> ui.navigate("login"));
-        });
+        // Username
+        String userId = AuthService.getLoggedInUser();
+        Span username;
+        if (userId == null) {
+            username = new Span("Sign In");
+            username.addClassName("username");
 
-        sidebar.add(content, logoutBtn);
+            // Dropdown Arrow Icon
+            Icon dropdownIcon = new Icon(VaadinIcon.CHEVRON_DOWN);
+            dropdownIcon.addClassName("dropdown-icon");
+
+            // Context Menu for Logout
+            ContextMenu contextMenu = new ContextMenu();
+            contextMenu.setTarget(userLayout);
+            contextMenu.setOpenOnClick(true); // 🔥 Fix: Now clicking the username layout opens the menu
+            contextMenu.addItem("Sign In", e -> {
+                AuthService.logout();
+                UI.getCurrent().navigate("login");
+            });
+
+            userLayout.add(username, dropdownIcon);
+        }
+        else{
+            username = new Span(userId);
+            username.addClassName("username");
+
+            // Dropdown Arrow Icon
+            Icon dropdownIcon = new Icon(VaadinIcon.CHEVRON_DOWN);
+            dropdownIcon.addClassName("dropdown-icon");
+
+            // Context Menu for Logout
+            ContextMenu contextMenu = new ContextMenu();
+            contextMenu.setTarget(userLayout);
+            contextMenu.setOpenOnClick(true); // 🔥 Fix: Now clicking the username layout opens the menu
+            contextMenu.addItem("Sign out", e -> {
+                AuthService.logout();
+                Notification.show("Logged out!");
+                UI.getCurrent().navigate("login");
+            });
+
+            userLayout.add(username, dropdownIcon);
+        }
+
+        // Add elements to sidebar
+        sidebar.add(content, userLayout);
         add(sidebar);
     }
 }

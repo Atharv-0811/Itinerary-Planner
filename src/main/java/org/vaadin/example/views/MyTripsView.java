@@ -8,8 +8,6 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.vaadin.example.layout.MainLayout;
 
-import java.awt.*;
-
 
 @Route(value = "my-trips", layout = MainLayout.class)
 @PageTitle("My Trips")

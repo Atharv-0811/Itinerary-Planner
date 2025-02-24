@@ -18,18 +18,15 @@ public class Application implements AppShellConfigurator {
 }
 
 // OpenTripMap API_KEY = 5ae2e3f221c38a28845f05b6e02fba63d057108c4b115526e08e0b21
-
 /*
-TODO:
-Add other Filters like Destination, Accommodation Type, etc. to the TourPackageFilter class.
+TODO: CUSTOM TRIP CREATION FEATURE
+    EX: add a button "explore restaurants/hotels - use Google API" then let user add restaurant to their own custom tour package
  */
-
 /*
-TODO:
-categorise the api query parameters based on the preferences.
-so for example
-CASE 1:  if user gives budget of 10000rs and accommodation type is hostel, i will allocate 3000rs(say) as parameter for api query for accommodation.
-CASE 2 : if user gives budget of 10000rs and accommodation type is resort, i will allocate 5000rs as parameter for hotels/accommodation in api query
+TODO: categorise the api query parameters based on the preferences.
+    so for example
+    CASE 1:  if user gives budget of 10000rs and accommodation type is hostel, i will allocate 3000rs(say) as parameter for api query for accommodation.
+    CASE 2 : if user gives budget of 10000rs and accommodation type is resort, i will allocate 5000rs as parameter for hotels/accommodation in api query
 */
 
 /*

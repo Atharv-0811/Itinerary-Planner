@@ -7,9 +7,6 @@ import com.vaadin.flow.component.html.H3;
 import com.vaadin.flow.component.html.Hr;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
@@ -27,17 +24,17 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Route(value = "dashboard", layout = MainLayout.class)
-public class DashboardView extends VerticalLayout implements BeforeEnterObserver {
+@Route(value = "dashboard2", layout = MainLayout.class)
+public class DashboardView2 extends VerticalLayout implements BeforeEnterObserver {
 
-    private final Div packagesContainer = new Div(); // Container for tour package cards
+    private final Div packagesContainer = new Div(); // Container for filtered tour cards
     private final ComboBox<String> tripTypeFilter = new ComboBox<>("Filter by Trip Type");
     private final TourPackageRepository tourPackageRepository;
     private final AuthService authService;
     private final UserPreferencesRepository userPreferencesRepository;
 
     @Autowired
-    public DashboardView(TourPackageRepository tourPackageRepository, AuthService authService, UserPreferencesRepository userPreferencesRepository) {
+    public DashboardView2(TourPackageRepository tourPackageRepository, AuthService authService, UserPreferencesRepository userPreferencesRepository) {
         this.tourPackageRepository = tourPackageRepository;
         this.authService = authService;
         this.userPreferencesRepository = userPreferencesRepository;
@@ -46,20 +43,20 @@ public class DashboardView extends VerticalLayout implements BeforeEnterObserver
         setPadding(true);
 
         configureTripTypeFilter();
-        H1 title = new H1("Recommended Trips for You");
+        H1 title = new H1("Recommendations for You");
         title.addClassName("tagline");
+        title.getStyle().set("opacity", "100%");
 
-        // Header layout with filter
-        HorizontalLayout header = new HorizontalLayout(title, tripTypeFilter);
+        // Header to display title and filter options
+        HorizontalLayout header = new HorizontalLayout();
         header.setWidthFull();
-        header.setJustifyContentMode(FlexComponent.JustifyContentMode.BETWEEN);
-        header.setAlignItems(FlexComponent.Alignment.CENTER);
+        header.setJustifyContentMode(JustifyContentMode.BETWEEN);
+        header.setAlignItems(Alignment.CENTER);
+        header.getStyle().set("height", "7vh");
+        header.add(title, tripTypeFilter);
 
         Hr divider = new Hr();
-
-        packagesContainer.getStyle().set("display", "grid")
-                .set("grid-template-columns", "repeat(auto-fit, minmax(300px, 1fr))")
-                .set("gap", "20px");
+        divider.addClassName("divider");
 
         add(header, divider, packagesContainer);
 
@@ -74,10 +71,12 @@ public class DashboardView extends VerticalLayout implements BeforeEnterObserver
     }
 
     private void configureTripTypeFilter() {
+        // Get unique trip types from the database
         List<TourPackage> tourPackages = tourPackageRepository.findAll();
-        Set<String> tripTypes = tourPackages.stream().map(TourPackage::getTripType).collect(Collectors.toSet());
+        Set<String> tripTypes = tourPackages.stream()
+                .map(TourPackage::getTripType)
+                .collect(Collectors.toSet());
         tripTypes.add("All");
-
         tripTypeFilter.setItems(tripTypes);
         tripTypeFilter.setValue("All");
         tripTypeFilter.setPlaceholder("Select Trip Type");
@@ -85,71 +84,78 @@ public class DashboardView extends VerticalLayout implements BeforeEnterObserver
     }
 
     private void loadTourPackages(String selectedTripType) {
-        packagesContainer.removeAll();
+        packagesContainer.removeAll(); // Clear previous results
         String userId = authService.getLoggedInUser();
+
+        // Fetch user preferences from the database
         Optional<UserPreferences> userPreferencesOptional = userPreferencesRepository.findByUserId(userId);
 
         if (userPreferencesOptional.isPresent()) {
             UserPreferences userPreferences = userPreferencesOptional.get();
+
+            // Fetch all tour packages from the repository
             List<TourPackage> tourPackages = tourPackageRepository.findAll();
+
+            // Create filter object with user preferences
             TourPackageFilter filter = new TourPackageFilter(userPreferences);
 
-            List<TourPackage> filteredPackages = filter.filterByTripDuration(filter.filterByBudget(tourPackages));
+            // Apply budget filter (you can add more filters here as needed)
+            List<TourPackage> filteredPackagesByBudget = filter.filterByBudget(tourPackages);
+            List<TourPackage> filteredPackagesByDuration = filter.filterByTripDuration(filteredPackagesByBudget);
 
+            // Filter by trip type if selected
             if (selectedTripType != null && !selectedTripType.equals("All")) {
-                filteredPackages = filteredPackages.stream()
+                filteredPackagesByDuration = filteredPackagesByDuration.stream()
                         .filter(pkg -> pkg.getTripType().equals(selectedTripType))
                         .collect(Collectors.toList());
             }
 
-            filteredPackages.forEach(this::addTourPackageCard);
+            // Debugging: Print out how many filtered packages are available
+            System.out.println("Number of filtered packages: " + filteredPackagesByDuration.size() + "\n\n");
+
+            // Ensure only valid packages are being passed to the display
+            if (filteredPackagesByDuration.isEmpty()) {
+                System.out.println("No valid packages found after filtering.");
+            } else {
+                // Now display the valid (filtered) packages
+                filteredPackagesByDuration.forEach(this::addTourPackageCard);
+            }
+
         } else {
+            // Handle case where user preferences are not found
             System.out.println("User preferences not found.");
         }
     }
 
+
     private void addTourPackageCard(TourPackage tourPackage) {
-        VerticalLayout card = new VerticalLayout();
+        // Create a container for the package
+        Div container = new Div();
+        container.setWidthFull();
+
+        // Create the heading for Package ID
+        H3 packageIdHeading = new H3(tourPackage.getId());
+        packageIdHeading.addClassName("welcome-msg");
+
+        // Create the tour card
+        Div card = new Div();
         card.addClassName("tour-card");
         card.setWidthFull();
-        card.getStyle()
-                .set("border", "1px solid #ddd")
-                .set("border-radius", "8px")
-                .set("padding", "15px")
-                .set("box-shadow", "0 2px 5px rgba(0, 0, 0, 0.1)");
 
-        H3 packageTitle = new H3("Trip: " + tourPackage.getId());
-        packageTitle.getStyle().set("margin", "0");
-
-        Div details = new Div();
-        details.getElement().setProperty("innerHTML",
-                "<strong>Accommodation:</strong> " + tourPackage.getAccommodation().getType() + "<br>" +
+        // Adding formatted content using HTML elements
+        card.getElement().setProperty("innerHTML",
+                "<strong>Accommodation Type:</strong> " + tourPackage.getAccommodation().getType() + "<br>" +
                         "<strong>Activities:</strong> " + String.join(", ", tourPackage.getActivities()) + "<br>" +
-                        "<strong>Budget:</strong> ₹" + tourPackage.getBudgetRange().get(0) + " - ₹" + tourPackage.getBudgetRange().get(1) + "<br>" +
-                        "<strong>Duration:</strong> " + tourPackage.getDuration() + " days");
-
-        Button moreInfoButton = new Button("More Info", event -> showMoreDetails(tourPackage));
-
-        card.add(packageTitle, details, moreInfoButton);
-        packagesContainer.add(card);
-    }
-
-    private void showMoreDetails(TourPackage tourPackage) {
-        Dialog dialog = new Dialog();
-        dialog.setHeaderTitle("Trip Details");
-
-        VerticalLayout content = new VerticalLayout();
-        content.getElement().setProperty("innerHTML",
-                "<strong>Trip Type:</strong> " + tourPackage.getTripType() + "<br>" +
-                        "<strong>Accommodation:</strong> " + tourPackage.getAccommodation().getType() + "<br>" +
-                        "<strong>Activities:</strong> " + String.join(", ", tourPackage.getActivities()) + "<br>" +
-                        "<strong>Budget:</strong> ₹" + tourPackage.getBudgetRange().get(0) + " - ₹" + tourPackage.getBudgetRange().get(1) + "<br>" +
+                        "<strong>Budget Range:</strong> ₹" + tourPackage.getBudgetRange().get(0) + " - ₹" + tourPackage.getBudgetRange().get(1) + "<br>" +
+                        "<strong>Cultural Activities:</strong> " + String.join(", ", tourPackage.getCulturalInterests()) + "<br>" +
                         "<strong>Duration:</strong> " + tourPackage.getDuration() + " days<br>" +
-                        "<strong>Food Preferences:</strong> " + String.join(", ", tourPackage.getFoodPreferences()));
+                        "<strong>Food:</strong> " + String.join(", ", tourPackage.getFoodPreferences())
+        );
 
-        Button closeButton = new Button("Close", event -> dialog.close());
+        // Add elements to the container
+        container.add(packageIdHeading, card);
 
-        dialog.add(content, closeButton);
-        dialog.open();
+        // Add the container to the UI container
+        packagesContainer.add(container);
     }
 }

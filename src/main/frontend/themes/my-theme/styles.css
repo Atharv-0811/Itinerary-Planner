@@ -258,6 +258,13 @@ html, body {
     height: 100vh;
 }
 
+.divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(to right, #ff7e5f, #feb47b);
+    margin: 0 0;
+}
+
 .tour-card {
     background-color: var(--tour-card-bg);
     border: 1px solid var(--tour-card-border);
