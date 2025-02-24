@@ -40,6 +40,14 @@ public class TourPackageFilter {
 
     }
 
+    // Filter by Trip Duration
+    public List<TourPackage> filterByTripDuration(List<TourPackage> tourPackages) {
+        Integer days =  userPreferences.getDays();
+        return tourPackages.stream()
+                .filter(pkg -> pkg.getDuration() <= userPreferences.getDays())
+                .collect(Collectors.toList());
+    }
+
     // Add other filters (e.g., destination, accommodation) as needed
     public List<TourPackage> filterByDestination(List<TourPackage> tourPackages) {
         return tourPackages.stream()

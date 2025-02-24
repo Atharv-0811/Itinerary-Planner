@@ -21,6 +21,11 @@ public class Application implements AppShellConfigurator {
 
 /*
 TODO:
+Add other Filters like Destination, Accommodation Type, etc. to the TourPackageFilter class.
+ */
+
+/*
+TODO:
 categorise the api query parameters based on the preferences.
 so for example
 CASE 1:  if user gives budget of 10000rs and accommodation type is hostel, i will allocate 3000rs(say) as parameter for api query for accommodation.

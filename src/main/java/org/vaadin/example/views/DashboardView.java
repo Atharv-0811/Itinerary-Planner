@@ -87,17 +87,25 @@ public class DashboardView extends VerticalLayout implements BeforeEnterObserver
             TourPackageFilter filter = new TourPackageFilter(userPreferences);
 
             // Apply budget filter (you can add more filters here as needed)
-            List<TourPackage> filteredPackages = filter.filterByBudget(tourPackages);
+            List<TourPackage> filteredPackagesByBudget = filter.filterByBudget(tourPackages);
+            List<TourPackage> filteredPackagesByDuration = filter.filterByTripDuration(filteredPackagesByBudget);
+
+            // Filter by trip type if selected
+            if (selectedTripType != null && !selectedTripType.equals("All")) {
+                filteredPackagesByDuration = filteredPackagesByDuration.stream()
+                        .filter(pkg -> pkg.getTripType().equals(selectedTripType))
+                        .collect(Collectors.toList());
+            }
 
             // Debugging: Print out how many filtered packages are available
-            System.out.println("Number of filtered packages: " + filteredPackages.size() + "\n\n");
+            System.out.println("Number of filtered packages: " + filteredPackagesByDuration.size() + "\n\n");
 
             // Ensure only valid packages are being passed to the display
-            if (filteredPackages.isEmpty()) {
+            if (filteredPackagesByDuration.isEmpty()) {
                 System.out.println("No valid packages found after filtering.");
             } else {
                 // Now display the valid (filtered) packages
-                filteredPackages.forEach(this::addTourPackageCard);
+                filteredPackagesByDuration.forEach(this::addTourPackageCard);
             }
 
         } else {

@@ -13,7 +13,6 @@ import org.vaadin.example.layout.MainLayout;
 import org.vaadin.example.model.UserPreferences;
 import org.vaadin.example.service.AuthService;
 import org.vaadin.example.service.UserPreferencesService;
-
 import java.util.Optional;
 
 @PermitAll
@@ -54,10 +53,10 @@ public class PreferencesView extends VerticalLayout {
 
         if (preferences.isPresent()) {
             UserPreferences prefs = preferences.get();
-            minBudgetField.setValue((double) prefs.getMinBudget());
-            maxBudgetField.setValue((double) prefs.getMaxBudget());
+            minBudgetField.setValue((double) ((double) prefs.getMinBudget() !=0 ? prefs.getMinBudget() : 5000));
+            maxBudgetField.setValue((double) ((double) prefs.getMaxBudget() !=0 ? prefs.getMaxBudget() : 20000));
             startDatePicker.setValue(prefs.getStartDate());
-            daysField.setValue((double) prefs.getDays());
+            daysField.setValue((double) ((double) prefs.getDays() !=0 ? prefs.getDays() : 5));
             accommodationField.setValue(prefs.getAccommodationType() != null ? prefs.getAccommodationType() : "");
             destinationField.setValue(prefs.getDestination() != null ? prefs.getDestination() : "");
         } else {
