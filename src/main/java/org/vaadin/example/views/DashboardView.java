@@ -36,6 +36,8 @@ public class DashboardView extends VerticalLayout implements BeforeEnterObserver
     private final AuthService authService;
     private final UserPreferencesRepository userPreferencesRepository;
 
+    private final Div packageCountLabel = new Div();
+
     @Autowired
     public DashboardView(TourPackageRepository tourPackageRepository, AuthService authService, UserPreferencesRepository userPreferencesRepository) {
         this.tourPackageRepository = tourPackageRepository;
@@ -49,6 +51,9 @@ public class DashboardView extends VerticalLayout implements BeforeEnterObserver
         H1 title = new H1("Recommended Trips for You");
         title.addClassName("tagline");
 
+        // Package count label
+        packageCountLabel.addClassName("package-count");
+
         // Header layout with filter
         HorizontalLayout header = new HorizontalLayout(title, tripTypeFilter);
         header.setWidthFull();
@@ -61,7 +66,7 @@ public class DashboardView extends VerticalLayout implements BeforeEnterObserver
                 .set("grid-template-columns", "repeat(auto-fit, minmax(300px, 1fr))")
                 .set("gap", "20px");
 
-        add(header, divider, packagesContainer);
+        add(header, packageCountLabel, divider, packagesContainer);
 
         loadTourPackages("All"); // Initially load all packages
     }
@@ -102,7 +107,12 @@ public class DashboardView extends VerticalLayout implements BeforeEnterObserver
                         .collect(Collectors.toList());
             }
 
+            // Update the package count label
+            packageCountLabel.setText("Showing " + filteredPackages.size() + " out of " + tourPackages.size() + " packages");
+
+            // Display filtered packages
             filteredPackages.forEach(this::addTourPackageCard);
+
         } else {
             System.out.println("User preferences not found.");
         }

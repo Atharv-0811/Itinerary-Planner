@@ -39,6 +39,8 @@ public class PreferencesView extends VerticalLayout {
 
         saveButton.addClickListener(e -> savePreferences());
 
+        addClassName("centered-content");
+
         add(minBudgetField, maxBudgetField, startDatePicker, daysField, accommodationField, destinationField, saveButton);
     }
 

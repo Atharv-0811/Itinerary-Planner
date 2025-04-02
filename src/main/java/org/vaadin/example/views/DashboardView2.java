@@ -12,6 +12,7 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.example.layout.MainLayout;
+import org.vaadin.example.layout.MainLayout3;
 import org.vaadin.example.model.TourPackage;
 import org.vaadin.example.model.UserPreferences;
 import org.vaadin.example.repositories.TourPackageRepository;
@@ -24,7 +25,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Route(value = "dashboard2", layout = MainLayout.class)
+@Route(value = "dashboard2", layout = MainLayout3.class)
 public class DashboardView2 extends VerticalLayout implements BeforeEnterObserver {
 
     private final Div packagesContainer = new Div(); // Container for filtered tour cards
