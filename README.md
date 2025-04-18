@@ -97,7 +97,6 @@ Access the app at:
 
 ## ✨ Future Enhancements
 
-- ✅ Add user registration
 - 📍 Google Maps Integration for destinations
 - 🧠 AI-powered smart recommendations
 - 📅 Custom Itinerary Planner
