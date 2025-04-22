@@ -12,5 +12,5 @@ import java.util.Optional;
 public interface TourPackageRepository extends MongoRepository<TourPackage, String> {
     @Query("{ 'budgetRange': { $gte: ?0, $lte: ?1 }, 'tripDuration': ?2, 'accommodation.type': ?3 }")
     List<TourPackage> findMatchingPackages(int minBudget, int maxBudget, int duration, String accommodationType);
-
+    Optional<TourPackage> findByDestinationIgnoreCase(String destination);
 }

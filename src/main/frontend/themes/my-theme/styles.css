@@ -282,6 +282,47 @@ html, body {
     color: var(--c2);
 }
 
+.custom-trip-view {
+    padding: 20px;
+    color: var(--c6); /* Light Sky Blue for text */
+    background-color: var(--c1); /* Dark Rich Black for background */
+}
+
+.checkbox{
+    color: var(--c6); /* Light Sky Blue for text */
+    font-size: 1rem;
+}
+
+.checkbox-title{
+    color: var(--c5); /* Bright Teal for title */
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+.checkbox-layout {
+    margin-bottom: 20px;
+    color: var(--c6); /* Light Sky Blue for text */
+}
+
+.budget-label {
+    color: var(--c5); /* Warm Flax Yellow for labels */
+    margin-bottom: 10px;
+    margin-top: 40px;
+}
+
+.search-button {
+    margin-top: 20px;
+    background-color: var(--c2); /* Bright Teal for button */
+    color: var(--c1); /* Dark Rich Black for text */
+    border-radius: 8px;
+    padding: 10px 20px;
+}
+
+.search-button:hover {
+    background-color: var(--c4); /* Soft Thistle for hover effect */
+    color: var(--c1); /* Dark Rich Black for text */
+}
+
 /* Example: the style is applied only to the textfields which have the bordered class name. */
 vaadin-text-field.bordered::part(input-field) {
     box-shadow: inset 0 0 0 1px var(--lumo-contrast-30pct);

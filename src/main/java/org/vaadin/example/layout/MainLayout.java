@@ -30,10 +30,11 @@ public class MainLayout extends VerticalLayout implements RouterLayout {
 
         Anchor homeLink = new Anchor("dashboard", "Home");
         Anchor tripsLink = new Anchor("my-trips", "My Trips");
+        Anchor customTripLink = new Anchor("custom-trip", "Custom Trip");
         Anchor preferencesLink = new Anchor("preferences", "Preferences");
 
         // Content layout
-        VerticalLayout content = new VerticalLayout(logo, homeLink, tripsLink, preferencesLink);
+        VerticalLayout content = new VerticalLayout(logo, homeLink, tripsLink, customTripLink, preferencesLink);
         content.setSpacing(true);
         content.setPadding(true);
         content.setSizeFull();

@@ -1,36 +1,12 @@
 package org.vaadin.example.views;
 
-import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H1;
-import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.html.Hr;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
-import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.BeforeEnterObserver;
-import com.vaadin.flow.router.Route;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.vaadin.example.layout.MainLayout;
-import org.vaadin.example.model.TourPackage;
-import org.vaadin.example.model.UserPreferences;
-import org.vaadin.example.repositories.TourPackageRepository;
-import org.vaadin.example.repositories.UserPreferencesRepository;
-import org.vaadin.example.service.AuthService;
-import org.vaadin.example.service.TourPackageFilter;
+import com.vaadin.flow.component.UI; import com.vaadin.flow.component.button.Button; import com.vaadin.flow.component.combobox.ComboBox; import com.vaadin.flow.component.dialog.Dialog; import com.vaadin.flow.component.html.Div; import com.vaadin.flow.component.html.H1; import com.vaadin.flow.component.html.H3; import com.vaadin.flow.component.html.Hr; import com.vaadin.flow.component.orderedlayout.FlexComponent; import com.vaadin.flow.component.orderedlayout.HorizontalLayout; import com.vaadin.flow.component.orderedlayout.VerticalLayout; import com.vaadin.flow.router.BeforeEnterEvent; import com.vaadin.flow.router.BeforeEnterObserver; import com.vaadin.flow.router.Route; import org.springframework.beans.factory.annotation.Autowired; import org.vaadin.example.layout.MainLayout; import org.vaadin.example.model.TourPackage; import org.vaadin.example.model.UserPreferences; import org.vaadin.example.repositories.TourPackageRepository; import org.vaadin.example.repositories.UserPreferencesRepository; import org.vaadin.example.service.AuthService; import org.vaadin.example.service.TourPackageFilter;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.List; import java.util.Optional; import java.util.Set; import java.util.stream.Collectors;
 
-@Route(value = "dashboard", layout = MainLayout.class)
-public class DashboardView extends VerticalLayout implements BeforeEnterObserver {
+@Route(value = "dashboard", layout = MainLayout.class) public class DashboardView extends VerticalLayout implements BeforeEnterObserver {
 
-    private final Div packagesContainer = new Div(); // Container for tour package cards
+    private final Div packagesContainer = new Div();
     private final ComboBox<String> tripTypeFilter = new ComboBox<>("Filter by Trip Type");
     private final TourPackageRepository tourPackageRepository;
     private final AuthService authService;
@@ -39,7 +15,10 @@ public class DashboardView extends VerticalLayout implements BeforeEnterObserver
     private final Div packageCountLabel = new Div();
 
     @Autowired
-    public DashboardView(TourPackageRepository tourPackageRepository, AuthService authService, UserPreferencesRepository userPreferencesRepository) {
+    public DashboardView(TourPackageRepository tourPackageRepository,
+                         AuthService authService,
+                         UserPreferencesRepository userPreferencesRepository) {
+
         this.tourPackageRepository = tourPackageRepository;
         this.authService = authService;
         this.userPreferencesRepository = userPreferencesRepository;
@@ -47,12 +26,19 @@ public class DashboardView extends VerticalLayout implements BeforeEnterObserver
         setSpacing(true);
         setPadding(true);
 
-        configureTripTypeFilter();
         H1 title = new H1("Recommended Trips for You");
         title.addClassName("tagline");
 
-        // Package count label
-        packageCountLabel.addClassName("package-count");
+        // Configure filters
+        configureTripTypeFilter();
+
+        // Custom Trip button
+        Button customTripBtn = new Button("🎒 Custom Trip", click -> UI.getCurrent().navigate("custom-trip"));
+        customTripBtn.getStyle()
+                .set("margin-top", "10px")
+                .set("background-color", "#007bff")
+                .set("color", "white")
+                .set("border-radius", "6px");
 
         // Header layout with filter
         HorizontalLayout header = new HorizontalLayout(title, tripTypeFilter);
@@ -66,9 +52,9 @@ public class DashboardView extends VerticalLayout implements BeforeEnterObserver
                 .set("grid-template-columns", "repeat(auto-fit, minmax(300px, 1fr))")
                 .set("gap", "20px");
 
-        add(header, packageCountLabel, divider, packagesContainer);
+        add(header, customTripBtn, packageCountLabel, divider, packagesContainer);
 
-        loadTourPackages("All"); // Initially load all packages
+        loadTourPackages("All"); // Initially load all
     }
 
     @Override
@@ -107,10 +93,9 @@ public class DashboardView extends VerticalLayout implements BeforeEnterObserver
                         .collect(Collectors.toList());
             }
 
-            // Update the package count label
             packageCountLabel.setText("Showing " + filteredPackages.size() + " out of " + tourPackages.size() + " packages");
+            packageCountLabel.getStyle().set("color", "#f4e285ff");
 
-            // Display filtered packages
             filteredPackages.forEach(this::addTourPackageCard);
 
         } else {
